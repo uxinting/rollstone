@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
                     engine = new EngineProxy(screen);
                     AbsEngine.ShapeConfig sc = new AbsEngine.ShapeConfig(0.3f, 1.0f);
-                    sc.setRestitution(1);
+                    sc.setRestitution(0.6f);
                     engine.addRectBody(new Vec2(200, 50), new Vec2(500, 100), null);
 //                    engine.addRectBody(new Vec2(20, 20), new Vec2(500, 1000), sc);
                     engine.addCircleBody(new Vec2(500, 1000), 10, sc);
