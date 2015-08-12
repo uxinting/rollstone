@@ -1,5 +1,6 @@
 package com.baidu.rollstone;
 
+import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.RectF;
 import android.os.Handler;
@@ -16,11 +17,14 @@ import com.baidu.rollstone.engine.AbsEngine;
 import com.baidu.rollstone.engine.Engine;
 import com.baidu.rollstone.proxy.EngineProxy;
 
+import org.jbox2d.collision.CircleDef;
 import org.jbox2d.collision.Shape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
+import org.jbox2d.dynamics.BodyDef;
 
 import java.util.List;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -50,11 +54,25 @@ public class MainActivity extends AppCompatActivity {
                     screen.setSize(new Vec2(width, height));
 
                     engine = new EngineProxy(screen);
-                    AbsEngine.ShapeConfig sc = new AbsEngine.ShapeConfig(0.3f, 1.0f);
-                    sc.setRestitution(0.6f);
+
+                    BodyDef def = new BodyDef();
+                    def.position.set(500, 1000);
+                    Body body = engine.getEngine().getWorld().createBody(def);
+                    CircleDef cDef = new CircleDef();
+                    cDef.radius = 10;
+                    cDef.friction = 0.3f;
+                    cDef.density = 1.0f;
+                    cDef.restitution =  0.6f;
+                    body.createShape(cDef);
+                    body.applyForce(new Vec2(10000f, 0.0f), body.getWorldCenter());
+                    body.setMassFromShapes();
+//                    body.applyImpulse(new Vec2(1000.0f, 0), body.getWorldCenter());
                     engine.addRectBody(new Vec2(200, 50), new Vec2(500, 100), null);
-//                    engine.addRectBody(new Vec2(20, 20), new Vec2(500, 1000), sc);
-                    engine.addCircleBody(new Vec2(500, 1000), 10, sc);
+//
+//                    AbsEngine.ShapeConfig sc = new AbsEngine.ShapeConfig(0.3f, 1.0f);
+//                    sc.setRestitution(0.6f);
+//                    Body body = engine.addCircleBody(new Vec2(500, 1000), 10, sc);
+
                     bind(engine, mockView);
                 }
                 return true;
@@ -64,13 +82,16 @@ public class MainActivity extends AppCompatActivity {
         mock.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+//                Intent intent = new Intent();
+//                intent.setClass(MainActivity.this, WorldActivity.class);
+//                MainActivity.this.startActivity(intent);
 
                 new Thread(new Runnable() {
                     private int steps = 0;
 
                     @Override
                     public void run() {
-                        for(; steps < 500; steps++) {
+                        for(; steps < 50; steps++) {
                             engine.step();
                             try {
                                 Thread.sleep(60);

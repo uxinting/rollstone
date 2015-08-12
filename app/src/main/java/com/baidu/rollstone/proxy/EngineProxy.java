@@ -1,6 +1,7 @@
 package com.baidu.rollstone.proxy;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
@@ -52,9 +53,13 @@ public class EngineProxy {
 
         Shape shape = body.getShapeList();
         if (shape == null) return;
+
+        paint.setColor(Color.WHITE);
         switch (shape.getType()) {
             case CIRCLE_SHAPE:
                 canvas.drawCircle(point.x, point.y, ((CircleShape) shape).getRadius(), paint);
+                paint.setColor(Color.RED);
+                canvas.drawLine(point.x, point.y, (float) (point.x+Math.cos(body.getAngle())*10), (float) (point.y-Math.sin(body.getAngle())*10), paint);
                 break;
             case POLYGON_SHAPE:
                 PolygonShape pShape = (PolygonShape) shape;
@@ -77,7 +82,6 @@ public class EngineProxy {
         }
         return path;
     }
-
 
     public void step() {
         for (int i = 0; i < 60; i++) {

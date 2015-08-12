@@ -38,6 +38,7 @@ public abstract class AbsEngine {
             shapeDef.friction = config.getFriction();
             shapeDef.density = config.getDensity();
             shapeDef.restitution = config.getRestitution();
+            shapeDef.userData = config.getData();
         }
         body.createShape(shapeDef);
         body.setMassFromShapes();
@@ -95,6 +96,7 @@ public abstract class AbsEngine {
         private float friction;
         private float density;
         private float restitution;
+        private Object data;
 
         public ShapeConfig(float friction, float density) {
             this.friction = friction;
@@ -125,6 +127,14 @@ public abstract class AbsEngine {
 
         public void setRestitution(float restitution) {
             this.restitution = restitution;
+        }
+
+        public Object getData() {
+            return data;
+        }
+
+        public void setData(Object data) {
+            this.data = data;
         }
     }
 }
