@@ -29,8 +29,6 @@ import java.util.Random;
 public class MainActivity extends AppCompatActivity {
 
     private Button mock;
-    private MockView mockView;
-    private EngineProxy engine;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,75 +36,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mock = (Button) findViewById(R.id.mock);
-        mockView = (MockView) findViewById(R.id.mockView);
-
-        mockView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-            @Override
-            public boolean onPreDraw() {
-                int width = mockView.getMeasuredWidth();
-                int height = mockView.getMeasuredHeight();
-
-                if (engine == null) {
-                    EngineProxy.Screen screen = new EngineProxy.Screen();
-                    screen.setCx(new Vec2(1.0f, 0f));
-                    screen.setCy(new Vec2(0f, -1.0f));
-                    screen.setOrigin(new Point(0, height));
-                    screen.setSize(new Vec2(width, height));
-
-                    engine = new EngineProxy(screen);
-
-                    BodyDef def = new BodyDef();
-                    def.position.set(500, 1000);
-                    Body body = engine.getEngine().getWorld().createBody(def);
-                    CircleDef cDef = new CircleDef();
-                    cDef.radius = 10;
-                    cDef.friction = 0.3f;
-                    cDef.density = 1.0f;
-                    cDef.restitution =  0.6f;
-                    body.createShape(cDef);
-                    body.applyForce(new Vec2(10000f, 0.0f), body.getWorldCenter());
-                    body.setMassFromShapes();
-//                    body.applyImpulse(new Vec2(1000.0f, 0), body.getWorldCenter());
-                    engine.addRectBody(new Vec2(200, 50), new Vec2(500, 100), null);
-//
-//                    AbsEngine.ShapeConfig sc = new AbsEngine.ShapeConfig(0.3f, 1.0f);
-//                    sc.setRestitution(0.6f);
-//                    Body body = engine.addCircleBody(new Vec2(500, 1000), 10, sc);
-
-                    bind(engine, mockView);
-                }
-                return true;
-            }
-        });
 
         mock.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent intent = new Intent();
-//                intent.setClass(MainActivity.this, WorldActivity.class);
-//                MainActivity.this.startActivity(intent);
-
-                new Thread(new Runnable() {
-                    private int steps = 0;
-
-                    @Override
-                    public void run() {
-                        for(; steps < 50; steps++) {
-                            engine.step();
-                            try {
-                                Thread.sleep(60);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                }).start();
+                Intent intent = new Intent();
+                intent.setClass(MainActivity.this, WorldActivity.class);
+                MainActivity.this.startActivity(intent);
             }
         });
-    }
-
-    private void bind(EngineProxy proxy, MockView view) {
-        view.bind(proxy);
     }
 
     @Override

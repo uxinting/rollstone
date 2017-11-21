@@ -2,14 +2,10 @@ package com.baidu.rollstone.engine;
 
 import org.jbox2d.collision.AABB;
 import org.jbox2d.collision.ShapeDef;
-import org.jbox2d.collision.ShapeType;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.World;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by wuxinting on 15/8/10.

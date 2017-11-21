@@ -6,7 +6,6 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
 import android.os.Handler;
-
 import com.baidu.rollstone.engine.AbsEngine;
 import com.baidu.rollstone.engine.Engine;
 
@@ -24,7 +23,6 @@ import org.jbox2d.dynamics.Body;
 public class EngineProxy {
 
     private Screen screen;
-    private Handler handler;
 
     private Engine engine;
 
@@ -86,9 +84,6 @@ public class EngineProxy {
     public void step() {
         for (int i = 0; i < 60; i++) {
             engine.step();
-            if (handler != null) {
-                handler.sendEmptyMessage(0);
-            }
         }
     }
 
@@ -125,14 +120,6 @@ public class EngineProxy {
         vec.y = point.y / screen.getCy().y + screen.getOrigin().y;
 
         return vec;
-    }
-
-    public Handler getHandler() {
-        return handler;
-    }
-
-    public void setHandler(Handler handler) {
-        this.handler = handler;
     }
 
     /**

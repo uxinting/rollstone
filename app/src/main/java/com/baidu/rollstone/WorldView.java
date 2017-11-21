@@ -4,13 +4,11 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.os.Handler;
-import android.os.Message;
 import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import com.baidu.rollstone.proxy.EngineProxy;
+import com.baidu.rollstone.entity.StoneWorld;
 
 /**
  * Created by wuxinting on 15/8/11.
@@ -19,8 +17,9 @@ public class WorldView extends SurfaceView implements SurfaceHolder.Callback {
 
     private SurfaceHolder holder;
     private Paint paint;
+    private DrawThread drawing;
 
-    private EngineProxy proxy;
+    private StoneWorld stoneWorld;
 
     public WorldView(Context context) {
         super(context);
@@ -47,15 +46,15 @@ public class WorldView extends SurfaceView implements SurfaceHolder.Callback {
         paint.setAntiAlias(true);
     }
 
-    public boolean bind(EngineProxy proxy) {
-        this.proxy = proxy;
-        proxy.setHandler(new EngineHandler());
+    public boolean bind(StoneWorld stoneWorld) {
+        this.stoneWorld = stoneWorld;
         return true;
     }
 
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
-
+        drawing = new DrawThread();
+        drawing.start();
     }
 
     @Override
@@ -65,7 +64,9 @@ public class WorldView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
-
+        if (drawing != null) {
+            drawing.interrupt();
+        }
     }
 
     private void draw() {
@@ -74,18 +75,23 @@ public class WorldView extends SurfaceView implements SurfaceHolder.Callback {
 
         canvas.drawColor(Color.BLUE);
 
-        if (proxy != null) {
-            proxy.draw(canvas, paint);
+        if (stoneWorld != null) {
+            stoneWorld.draw(canvas);
         }
 
         holder.unlockCanvasAndPost(canvas);
     }
 
-    private class EngineHandler extends Handler {
+    private class DrawThread extends Thread {
 
         @Override
-        public void handleMessage(Message msg) {
-            draw();
+        public void run() {
+            for (;;) {
+                draw();
+                if (stoneWorld != null) {
+                    stoneWorld.step();
+                }
+            }
         }
     }
 }
